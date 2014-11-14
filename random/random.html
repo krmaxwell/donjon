@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Random Generator</title>
+    <script type="text/javascript">
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// this is a completely self-contained random generator,
+// implemented in HTML and JavaScript.
+//
+// to create a new random generator, simply copy this file
+// and change the content of the gen_data array.
+//
+// the primary key of the gen_data array must be named 'main'.
+// to increase the number of random things generated at a time,
+// increase the number of rows of the output textarea.
+//
+// written and released to the public domain by drow [drow@bin.sh]
+// http://creativecommons.org/publicdomain/zero/1.0/
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// json format
+// http://en.wikipedia.org/wiki/JSON
+
+  var gen_data = {};
+
+  gen_data['main'] = [
+    'A {gender} {race} warrior, wearing {armor} and wielding {weapon}.'
+  ];
+  gen_data['gender'] = [
+    'male', 'female'
+  ];
+  gen_data['race'] = {
+    '1-3': 'human',
+    '4-5': 'dwarf',
+      '6': 'elf'
+  };
+  gen_data['armor'] = {
+    '01-50': 'leather armor',
+    '51-90': 'chainmail',
+    '91-00': 'plate armor'
+  };
+  gen_data['weapon'] = [
+    '{melee_weapon}',
+    '{melee_weapon} and a shield',
+    'twin blades',
+    '{ranged_weapon}'
+  ];
+  gen_data['melee_weapon'] = [
+    'a battleaxe', 'a mace', 'a spear', 'a sword'
+  ];
+  gen_data['ranged_weapon'] = [
+    'a longbow and arrows', 'a heavy crossbow'
+  ];
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    </script>
+  </head>
+  <body>
+    <form method="get" onsubmit="return false;">
+      <p><textarea id="output" cols="100" rows="10" readonly></textarea></p>
+      <p><input type="button" value="Generate" onclick="more_random();" /></p>
+    </form>
+    <script type="text/javascript" src="data:text/javascript;base64,Ly8gLSAtIC0gLSAtIC0gLSAtIC0gLSAtIC0gLSAtIC0gLSAtIC0gLSAtIC0gLSAtIC0gLSAtIC0gLSAtIC0gLSAtIC0gLSAtIC0gLSAtCi8vIHJhbmRvbS5qcwovLwovLyB3cml0dGVuIGFuZCByZWxlYXNlZCB0byB0aGUgcHVibGljIGRvbWFpbiBieSBkcm93IDxkcm93QGJpbi5zaD4KLy8gaHR0cDovL2NyZWF0aXZlY29tbW9ucy5vcmcvcHVibGljZG9tYWluL3plcm8vMS4wLwoKZnVuY3Rpb24gbW9yZV9yYW5kb20oKXt2YXIgYT1kb2N1bWVudC5nZXRFbGVtZW50QnlJZCgib3V0cHV0IiksYj1wYXJzZUludChhLnJvd3MpO2lmKGI8MSliPTE7Yj1nZW5lcmF0ZV9saXN0KCJtYWluIixiKTthLnZhbHVlPWIuam9pbigiXG4iKX1mdW5jdGlvbiBnZW5lcmF0ZV90ZXh0KGEpe2lmKGE9Z2VuX2RhdGFbYV0paWYoYT1zZWxlY3RfZnJvbShhKSlyZXR1cm4gZXhwYW5kX3Rva2VucyhhKTtyZXR1cm4iIn1mdW5jdGlvbiBnZW5lcmF0ZV9saXN0KGEsYil7dmFyIGM9W10sZDtmb3IoZD0wO2Q8YjtkKyspYy5wdXNoKGdlbmVyYXRlX3RleHQoYSkpO3JldHVybiBjfWZ1bmN0aW9uIHNlbGVjdF9mcm9tKGEpe3JldHVybiBhLmNvbnN0cnVjdG9yPT1BcnJheT9zZWxlY3RfZnJvbV9hcnJheShhKTpzZWxlY3RfZnJvbV90YWJsZShhKX1mdW5jdGlvbiBzZWxlY3RfZnJvbV9hcnJheShhKXtyZXR1cm4gYVtNYXRoLmZsb29yKE1hdGgucmFuZG9tKCkqYS5sZW5ndGgpXX0KZnVuY3Rpb24gc2VsZWN0X2Zyb21fdGFibGUoYSl7dmFyIGI7aWYoYj1zY2FsZV90YWJsZShhKSl7Yj1NYXRoLmZsb29yKE1hdGgucmFuZG9tKCkqYikrMTt2YXIgYztmb3IoYyBpbiBhKXt2YXIgZD1rZXlfcmFuZ2UoYyk7aWYoYj49ZFswXSYmYjw9ZFsxXSlyZXR1cm4gYVtjXX19cmV0dXJuIiJ9ZnVuY3Rpb24gc2NhbGVfdGFibGUoYSl7dmFyIGI9MCxjO2ZvcihjIGluIGEpe3ZhciBkPWtleV9yYW5nZShjKTtpZihkWzFdPmIpYj1kWzFdfXJldHVybiBifWZ1bmN0aW9uIGtleV9yYW5nZShhKXt2YXIgYjtyZXR1cm4oYj0vKFxkKyktMDAvLmV4ZWMoYSkpP1twYXJzZUludChiWzFdKSwxMDBdOihiPS8oXGQrKS0oXGQrKS8uZXhlYyhhKSk/W3BhcnNlSW50KGJbMV0pLHBhcnNlSW50KGJbMl0pXTphPT0iMDAiP1sxMDAsMTAwXTpbcGFyc2VJbnQoYSkscGFyc2VJbnQoYSldfQpmdW5jdGlvbiBleHBhbmRfdG9rZW5zKGEpe2Zvcih2YXIgYjtiPS97KFx3Kyl9Ly5leGVjKGEpOyl7Yj1iWzFdO3ZhciBjO2E9KGM9Z2VuZXJhdGVfdGV4dChiKSk/YS5yZXBsYWNlKCJ7IitiKyJ9IixjKTphLnJlcGxhY2UoInsiK2IrIn0iLGIpfXJldHVybiBhfW1vcmVfcmFuZG9tKCk7Cg=="></script>
+  </body>
+</html>

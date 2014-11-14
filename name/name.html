@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Name Generator</title>
+    <script type="text/javascript">
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// this is a completely self-contained random name generator,
+// implemented in HTML and JavaScript.
+//
+// to create a new name generator, simply copy this file
+// and change the content of the src_names array.
+//
+// to increase the number of random names generated at a time,
+// increase the number of rows of the output textarea.
+//
+// written and released to the public domain by drow [drow@bin.sh]
+// http://creativecommons.org/publicdomain/zero/1.0/
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// json format
+// http://en.wikipedia.org/wiki/JSON
+
+  var src_names = [
+    'Aakheperkare', 'Addaya', 'Ahhotpe', 'Ahmes', 'Ahmose',
+    'Ahmose-saneit', 'Ahmose-sipari', 'Akencheres', 'Akunosh',
+    'Amenakht', 'Amenakhte', 'Amenemhat', 'Amenemheb', 'Amenemopet',
+    'Amenhirkopshef', 'Amenhirwenemef', 'Amenhotpe', 'Amenmesse',
+    'Amenmose', 'Amennestawy', 'Amenope', 'Amenophis', 'Amenwahsu',
+    'Ameny', 'Amosis-ankh', 'Amoy', 'Amunemhat', 'Amunherpanesha',
+    'Amunhotpe', 'Anen', 'Ankh-Psamtek', 'Ankhef', 'Ankhefenamun',
+    'Ankhefenkhons', 'Ankhefenmut', 'Ankhsheshonq', 'Ankhtify',
+    'Ankhtyfy', 'Ankhu', 'Ankhuemhesut', 'Any', 'Apophis', 'Baba',
+    'Baenre', 'Bak', 'Bakenkhons', 'Bakenkhonsu', 'Bakenmut',
+    'Bakennefi', 'Bakenptah', 'Baky', 'Bata', 'Bay', 'Bek', 'Bengay',
+    'Besenmut', 'Butehamun', 'Denger', 'Deniuenkhons', 'Djadjaemankh',
+    'Djau', 'Djedefhor', 'Djedhor', 'Djedhoriufankh', 'Djedi',
+    'Djedkhonsiufankh', 'Djedkhonsuefankh', 'Djedptahefankh',
+    'Djedptahiufankh', 'Djehutmose', 'Djehuty', 'Djehutymose',
+    'Djenutymes', 'Djeserka', 'Djeserkare', 'Djeserkheprure',
+    'Djesersukhons', 'Djethutmose', 'Djhutmose', 'Genubath', 'Gua',
+    'Haankhef', 'Hapimen', 'Hapu', 'Hapuseneb', 'Hapymen',
+    'Haremakhet', 'Haremsat', 'Harkhebi', 'Harkhuf', 'Harmhabi',
+    'Harnakhte', 'Harsiese', 'Hay', 'Hemaka', 'Henenu', 'Henuka',
+    'Heqaemeheh', 'Heqaib', 'Herenamenpenaef', 'Herihor', 'Hesire',
+    'Hor', 'Horapollo', 'Hordedef', 'Horemheb', 'Hori', 'Hornedjitef',
+    'Horpais', 'Horwebbefer', 'Hrihor', 'Hunefer', 'Huy', 'Huya',
+    'Iawy', 'Ibana', 'Ibe', 'Idy', 'Ikeni', 'Ikui', 'Imhotep',
+    'Inarus', 'Inebni', 'Ineni', 'Inyotef', 'Ipi', 'Ipuwer', 'Ipuy',
+    'Ipy', 'Ishpi', 'Iu-Amun', 'Iufankh', 'Iufenamun', 'Iunmin',
+    'Iuseneb', 'Iuwlot', 'Iyerniutef', 'Iyimennuef', 'Iymeru', 'Jarha',
+    'Kadjadja', 'Kahma', 'Kaka', 'Kanakht', 'Karnefhere', 'Katenen',
+    'Kawab', 'Kay', 'Kemuny', 'Kenamun', 'Kenefer', 'Kerasher', 'Kha',
+    'Khaemhet', 'Khaemnetjeru', 'Khaemwaset', 'Khahor',
+    'Khakheperraseneb', 'Khay', 'Khensthoth', 'Kheruef', 'Khety',
+    'Khnemibre', 'Khnumhotep', 'Khnumhotpe', 'Khons', 'Khonsirdais',
+    'Khonskhu', 'Khonsuemwaset', 'Khufukhaf', 'Khui', 'Kuenre',
+    'Kysen', 'Maakha', 'Mahu', 'Mahuhy', 'Maiherpri', 'Manakhtuf',
+    'Manetho', 'Masaharta', 'May', 'Maya', 'Mehy', 'Meketre', 'Mekhu',
+    'Men', 'Menkheperraseneb', 'Menkheperre', 'Menmet-Ra', 'Menna',
+    'Mentuemhat', 'Mentuherkhepshef', 'Meremptor', 'Merenamun',
+    'Merenkhons', 'Merenptah', 'Mereruka', 'Merka', 'Mernebptah',
+    'Mery', 'Meryamun', 'Meryatum', 'Meryawy', 'Merymose', 'Meryptah',
+    'Meryrahashtef', 'Meryre', 'Mes', 'Min', 'Minkhat', 'Minmose',
+    'Minnakht', 'Mokhtar', 'Montjuemhat', 'Montjuhirkopshef',
+    'Montuemhet', 'Mose', 'Naga-ed-der', 'Nakhthorheb',
+    'Nakhtimenwast', 'Nakhtmin', 'Nakhtnebef', 'Naneferkeptah',
+    'Nebamun', 'Nebankh', 'Nebemakst', 'Nebhotep', 'Nebimes',
+    'Nebitka', 'Nebmaetre', 'Nebnefer', 'Nebnetjeru', 'Nebseni',
+    'Nebseny', 'Nebwennenef', 'Nechoutes', 'Neferhotep', 'Neferhotpe',
+    'Neferkheperuhersekheper', 'Nefermaet', 'Nefermenu', 'Neferrenpet',
+    'Neferti', 'Nehasy', 'Nehi', 'Nekau', 'Nekhwemmut',
+    'Nendjbaendjed', 'Nenedjebaendjed', 'Neneferkaptah', 'Nenkhefta',
+    'Nes', 'Nesamun', 'Neshi', 'Neshorpakhered', 'Neskhons', 'Nesmont',
+    'Nespaherenhat', 'Nespakashuty', 'Nespatytawy', 'Nespherenhat',
+    'Nessuimenopet', 'Nestanebetasheru', 'Nestefnut', 'Netihur',
+    'Nigmed', 'Nimlot', 'Niumateped', 'Pa-Siamun', 'Pabasa',
+    'Pabernefy', 'Padiamenet', 'Padiamenipet', 'Padiamun', 'Padineith',
+    'Paheripedjet', 'Pairy', 'Pait', 'Pakharu', 'Pakhneter', 'Pamont',
+    'Pamose', 'Pamu', 'Panas', 'Paneb', 'Paneferher', 'Panehesy',
+    'Paperpa', 'Paramesse', 'Parennefer', 'Pasebakhaenniut',
+    'Pasekhonsu', 'Paser', 'Pashedbast', 'Pashedu', 'Pasherdjehuty',
+    'Pawiaeadja', 'Paynedjem', 'Payneferher', 'Pediamun', 'Pediese',
+    'Pedihor', 'Penamun', 'Penbuy', 'Penmaat', 'Pennestawy',
+    'Pentaweret', 'Pentu', 'Pepynakhte', 'Peraha', 'Pinhasy',
+    'Pinotmou', 'Prahotpe', 'Pramessu', 'Preherwenemef',
+    'Prehirwennef', 'Prepayit', 'Psamtek', 'Psenamy', 'Psenmin',
+    'Ptahhemakhet', 'Ptahhemhat-Ty', 'Ptahhotep', 'Ptahhudjankhef',
+    'Ptahmose', 'Ptahshepses', 'Qenymin', 'Rahotep', 'Rahotpe', 'Raia',
+    'Ramessenakhte', 'Ramessu', 'Rekhmire', 'Reuser', 'Rewer',
+    'Roma-Roy', 'Rudamun', 'Sabef', 'Sabni', 'Salatis', 'Samut',
+    'Sanehet', 'Sasobek', 'Sawesit', 'Scepter', 'Sekhemkare',
+    'Sekhmire', 'Seneb', 'Senebtyfy', 'Senemut', 'Senmen', 'Sennedjem',
+    'Sennefer', 'Sennufer', 'Senui', 'Senwosret', 'Serapion', 'Sese',
+    'Setau', 'Setep', 'Sethe', 'Sethherwenemef', 'Sethhirkopshef',
+    'Sethnakhte', 'Sethnakte', 'Sethy', 'Setne', 'Setymerenptah',
+    'Shedsunefertum', 'Shemay', 'Shepenwepet', 'Si-Mut', 'Siamun',
+    'Siese', 'Sinuhe', 'Sipair', 'Sneferu', 'Somtutefnakhte', 'Surero',
+    'Suty', 'Sutymose', 'Takairnayu', 'Takany', 'Tasetmerydjehuty',
+    'Tayenimu', 'Tefibi', 'Tenermentu', 'Teti-en', 'Tetisheri',
+    'Tjaenhebyu', 'Tjahapimu', 'Tjaroy', 'Tjauemdi', 'Tjenna', 'Tjety',
+    'To', 'Tui', 'Tutu', 'Tymisba', 'Udjahorresne', 'Udjahorresneith',
+    'Uni', 'Userhet', 'Usermontju', 'Wadjmose', 'Wahibre-Teni',
+    'Wahka', 'Webaoner', 'Webensenu', 'Wedjakhons', 'Wenamun',
+    'Wendjabaendjed', 'Wendjebaendjed', 'Weni', 'Wennefer', 'Wennufer',
+    'Wepmose', 'Wepwawetmose', 'Werdiamenniut', 'Werirenptah',
+    'Yanhamu', 'Yey', 'Yii', 'Yuya', 'Zazamoukh'
+  ];
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    </script>
+  </head>
+  <body>
+    <form method="get" onsubmit="return false;">
+      <p><textarea id="output" cols="100" rows="10" readonly></textarea></p>
+      <p><input type="button" value="Generate" onclick="more_names();" /></p>
+    </form>
+    <script type="text/javascript" src="data:text/javascript;base64,Ly8gLSAtIC0gLSAtIC0gLSAtIC0gLSAtIC0gLSAtIC0gLSAtIC0gLSAtIC0gLSAtIC0gLSAtIC0gLSAtIC0gLSAtIC0gLSAtIC0gLSAtCi8vIG5hbWUuanMKLy8KLy8gd3JpdHRlbiBhbmQgcmVsZWFzZWQgdG8gdGhlIHB1YmxpYyBkb21haW4gYnkgZHJvdyA8ZHJvd0BiaW4uc2g+Ci8vIGh0dHA6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL3B1YmxpY2RvbWFpbi96ZXJvLzEuMC8KCnZhciBuYW1lX3NldD17bWFpbjpzcmNfbmFtZXN9LGNoYWluX2NhY2hlPXt9O2Z1bmN0aW9uIG1vcmVfbmFtZXMoKXt2YXIgYj1kb2N1bWVudC5nZXRFbGVtZW50QnlJZCgib3V0cHV0IiksYT1wYXJzZUludChiLnJvd3MpO2lmKGE8MSlhPTE7YT1uYW1lX2xpc3QoIm1haW4iLGEpO2IudmFsdWU9YS5qb2luKCJcbiIpfWZ1bmN0aW9uIGdlbmVyYXRlX25hbWUoYil7aWYoYj1tYXJrb3ZfY2hhaW4oYikpcmV0dXJuIG1hcmtvdl9uYW1lKGIpO3JldHVybiIifWZ1bmN0aW9uIG5hbWVfbGlzdChiLGEpe3ZhciBjPVtdLGQ7Zm9yKGQ9MDtkPGE7ZCsrKWMucHVzaChnZW5lcmF0ZV9uYW1lKGIpKTtyZXR1cm4gY31mdW5jdGlvbiBtYXJrb3ZfY2hhaW4oYil7dmFyIGE7aWYoYT1jaGFpbl9jYWNoZVtiXSlyZXR1cm4gYTtlbHNlIGlmKGE9bmFtZV9zZXRbYl0paWYoYT1jb25zdHJ1Y3RfY2hhaW4oYSkpcmV0dXJuIGNoYWluX2NhY2hlW2JdPWE7cmV0dXJuIGZhbHNlfQpmdW5jdGlvbiBjb25zdHJ1Y3RfY2hhaW4oYil7dmFyIGE9e30sYztmb3IoYz0wO2M8Yi5sZW5ndGg7YysrKXt2YXIgZD1iW2NdLnNwbGl0KC9ccysvKTthPWluY3JfY2hhaW4oYSwicGFydHMiLGQubGVuZ3RoKTt2YXIgZjtmb3IoZj0wO2Y8ZC5sZW5ndGg7ZisrKXt2YXIgZT1kW2ZdO2E9aW5jcl9jaGFpbihhLCJuYW1lX2xlbiIsZS5sZW5ndGgpO3ZhciBnPWUuc3Vic3RyKDAsMSk7YT1pbmNyX2NoYWluKGEsImluaXRpYWwiLGcpO2U9ZS5zdWJzdHIoMSk7Zm9yKHZhciBoPWc7ZS5sZW5ndGg+MDspe2c9ZS5zdWJzdHIoMCwxKTthPWluY3JfY2hhaW4oYSxoLGcpO2U9ZS5zdWJzdHIoMSk7aD1nfX19cmV0dXJuIHNjYWxlX2NoYWluKGEpfWZ1bmN0aW9uIGluY3JfY2hhaW4oYixhLGMpe2lmKGJbYV0paWYoYlthXVtjXSliW2FdW2NdKys7ZWxzZSBiW2FdW2NdPTE7ZWxzZXtiW2FdPXt9O2JbYV1bY109MX1yZXR1cm4gYn0KZnVuY3Rpb24gc2NhbGVfY2hhaW4oYil7dmFyIGE9e30sYztmb3IoYyBpbiBiKXthW2NdPTA7dmFyIGQ7Zm9yKGQgaW4gYltjXSl7dmFyIGY9YltjXVtkXTtmPU1hdGguZmxvb3IoTWF0aC5wb3coZiwxLjMpKTtiW2NdW2RdPWY7YVtjXSs9Zn19Yi50YWJsZV9sZW49YTtyZXR1cm4gYn1mdW5jdGlvbiBtYXJrb3ZfbmFtZShiKXt2YXIgYT1zZWxlY3RfbGluayhiLCJwYXJ0cyIpLGM9W10sZDtmb3IoZD0wO2Q8YTtkKyspe3ZhciBmPXNlbGVjdF9saW5rKGIsIm5hbWVfbGVuIiksZT1zZWxlY3RfbGluayhiLCJpbml0aWFsIiksZz1lO2ZvcihlPWU7Zy5sZW5ndGg8Zjspe2U9c2VsZWN0X2xpbmsoYixlKTtnKz1lO2U9ZX1jLnB1c2goZyl9cmV0dXJuIGMuam9pbigiICIpfQpmdW5jdGlvbiBzZWxlY3RfbGluayhiLGEpe3ZhciBjPWIudGFibGVfbGVuW2FdO2M9TWF0aC5mbG9vcihNYXRoLnJhbmRvbSgpKmMpO3ZhciBkPTA7Zm9yKHRva2VuIGluIGJbYV0pe2QrPWJbYV1bdG9rZW5dO2lmKGM8ZClyZXR1cm4gdG9rZW59cmV0dXJuIi0ifW1vcmVfbmFtZXMoKTsK"></script>
+  </body>
+</html>
